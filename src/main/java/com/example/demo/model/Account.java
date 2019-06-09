@@ -1,5 +1,7 @@
 package com.example.demo.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -7,7 +9,9 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "account", schema = "public")
-public class Account {
+public class Account implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(columnDefinition = "varchar(64)")

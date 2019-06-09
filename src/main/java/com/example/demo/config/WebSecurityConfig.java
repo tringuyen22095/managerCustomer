@@ -14,20 +14,19 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import com.example.demo.bll.AccountService;
-
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Resource(name = "accountService")
-	private AccountService accountService;
+	private UserDetailsService userDetailsService;
 
 	@Autowired
 	private JwtEntryPoint unauthorizedHandler;
@@ -40,7 +39,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	public void globalUserDetails(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(accountService).passwordEncoder(encoder());
+		auth.userDetailsService(userDetailsService).passwordEncoder(encoder());
 	}
 
 	@Bean
@@ -68,7 +67,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-				.antMatchers("/", "/account/login").permitAll().anyRequest().authenticated();
+				.antMatchers("/", "/account/login", "/account/").permitAll().anyRequest().authenticated();
 		http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
 	}
 
@@ -76,32 +75,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring().antMatchers("/*.html", "/*.css", "/*.js");
 	}
-	/*
-	 * @Bean
-	 * 
-	 * @ConfigurationProperties("security.oauth2.google.client") public
-	 * AuthorizationCodeResourceDetails google() { return new
-	 * AuthorizationCodeResourceDetails(); }
-	 * 
-	 * @Bean
-	 * 
-	 * @ConfigurationProperties("security.oauth2.google.resource") public
-	 * ResourceServerProperties googleResource() { return new
-	 * ResourceServerProperties(); }
-	 * 
-	 * private Filter ssoGoogleFilter() { OAuth2ClientAuthenticationProcessingFilter
-	 * googleFilter = new OAuth2ClientAuthenticationProcessingFilter(
-	 * "/google/login"); OAuth2RestTemplate googleTemplate = new
-	 * OAuth2RestTemplate(google(), oauth2ClientContext);
-	 * googleFilter.setRestTemplate(googleTemplate); googleFilter
-	 * .setTokenServices(new
-	 * UserInfoTokenServices(googleResource().getUserInfoUri(),
-	 * google().getClientId())); return googleFilter; }
-	 * 
-	 * private Filter ssoFilter() { List<Filter> filters = new ArrayList<>();
-	 * filters.add(ssoGoogleFilter()); // filters.add(ssoFacebookFilter());
-	 * 
-	 * CompositeFilter filter = new CompositeFilter(); filter.setFilters(filters);
-	 * return filter; }
-	 */
+
 }

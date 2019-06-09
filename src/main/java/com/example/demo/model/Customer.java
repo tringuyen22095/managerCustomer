@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -14,7 +15,9 @@ import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "customer", schema = "public")
-public class Customer {
+public class Customer implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customer_id_seq_generator")

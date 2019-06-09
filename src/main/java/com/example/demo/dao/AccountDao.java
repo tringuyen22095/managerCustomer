@@ -6,7 +6,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.example.demo.model.Account;
 
-public interface AccountDao extends CrudRepository<Account, Integer> {
+public interface AccountDao extends CrudRepository<Account, String> {
 
 	/**
 	 * Login by uid & pwd

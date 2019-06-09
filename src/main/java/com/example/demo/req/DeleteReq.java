@@ -1,23 +1,21 @@
 package com.example.demo.req;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class DeleteReq {
 
 	@JsonProperty(value = "ids")
-	private List<Object> ids;
+	private Iterable<Integer> ids;
 
-	public List<Object> getIds() {
+	public Iterable<Integer> getIds() {
 		return ids;
 	}
 
-	public void setIds(List<Object> ids) {
+	public void setIds(Iterable<Integer> ids) {
 		this.ids = ids;
 	}
 
-	public DeleteReq(List<Object> ids) {
+	public DeleteReq(Iterable<Integer> ids) {
 		super();
 		this.ids = ids;
 	}

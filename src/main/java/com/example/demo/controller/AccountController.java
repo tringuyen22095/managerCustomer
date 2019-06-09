@@ -45,7 +45,7 @@ public class AccountController {
 			String uid = req.getUid();
 			String pwd = req.getPwd();
 
-			Account m = accountService.getById(req.getUid());
+			Account m = accountService.findById(req.getUid());
 			if (m == null) {
 				res.setMessage("User name doesn't exist!");
 			} else {
