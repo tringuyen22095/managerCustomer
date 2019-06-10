@@ -27,16 +27,17 @@ public class CustomerServiceImpl implements CustomerService {
 
 	public List<Customer> search(BaseReq req) throws Exception {
 		List<Customer> res;
-		if (!req.getKeyword().isEmpty()) {
+		if (req.getKeyword() != null) {
 			res = StreamSupport.stream(customerDao.findAll().spliterator(), false)
-					.filter(i -> i.getName().contains(req.getKeyword()) || i.getAddress().contains(req.getKeyword())
-							|| i.getPhone().contains(req.getKeyword())
-							|| i.getCompany().getName().contains(req.getKeyword()))
-					.skip((req.getPage() - 1) * req.getShow()).limit(req.getShow()).collect(Collectors.toList());
+					.filter(i -> i.getName().toUpperCase().trim().contains(req.getKeyword().toUpperCase().trim())
+							|| i.getAddress().toUpperCase().trim().contains(req.getKeyword().toUpperCase().trim())
+							|| i.getPhone().toUpperCase().trim().contains(req.getKeyword().toUpperCase().trim())
+							|| i.getCompany().getName().toUpperCase().trim().contains(req.getKeyword().toUpperCase().trim()))
+					.collect(Collectors.toList());
 		} else {
 			res = StreamSupport.stream(customerDao.findAll().spliterator(), false)
 					.filter(i -> i.getDob().after(req.getdFrom()) && i.getDob().before(req.getdTo()))
-					.skip((req.getPage() - 1) * req.getShow()).collect(Collectors.toList());
+					.collect(Collectors.toList());
 		}
 
 		return res;

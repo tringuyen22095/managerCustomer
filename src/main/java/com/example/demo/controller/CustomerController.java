@@ -60,7 +60,11 @@ public class CustomerController {
 			List<Customer> lCus = customerService.search(req);
 
 			Map<String, Object> data = new LinkedHashMap<>();
-			data.put("data", lCus);
+			int totalPage = lCus.size() / req.getShow();
+			totalPage += lCus.size() % req.getShow() != 0 ? 1 : 0;
+			data.put("page", totalPage == 0 ? 1 : totalPage < req.getPage() ? totalPage : (req.getPage() == 0 ? 1 : req.getPage()));
+			data.put("totalRecord", lCus.size());
+			data.put("data", lCus.stream().skip((Integer.parseInt(data.get("page").toString()) - 1) * req.getShow()).limit(req.getShow()));
 
 			res.setResult(data);
 		} catch (Exception ex) {

@@ -15,10 +15,10 @@ public class BaseReq {
 	@JsonProperty(value = "dTo")
 	private Date dTo;
 
-	@JsonProperty(value = "dTo")
+	@JsonProperty(value = "show")
 	private Integer show;
 
-	@JsonProperty(value = "dTo")
+	@JsonProperty(value = "page")
 	private Integer page;
 
 	public String getKeyword() {
