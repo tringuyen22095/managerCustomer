@@ -29,9 +29,7 @@ public class AccountServiceImpl implements UserDetailsService, AccountService {
 	}
 
 	private Account getById(String uid) {
-		Account res = accountDao.getById(uid);
-
-		return res;
+		return accountDao.findById(uid).orElse(null);
 	}
 
 	@Override

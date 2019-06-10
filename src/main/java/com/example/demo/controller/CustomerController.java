@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.bll.CustomerService;
-import com.example.demo.dto.CustomerDto;
 import com.example.demo.model.Customer;
 import com.example.demo.req.BaseReq;
 import com.example.demo.req.CustomerReq;
@@ -58,12 +57,7 @@ public class CustomerController {
 		DataRsp res = new DataRsp();
 
 		try {
-			List<CustomerDto> lCus;
-			if (req.getKeyword() != null) {
-				lCus = customerService.search(req.getKeyword());
-			} else {
-				lCus = customerService.search(req.getdFrom(), req.getdTo());
-			}
+			List<Customer> lCus = customerService.search(req);
 
 			Map<String, Object> data = new LinkedHashMap<>();
 			data.put("data", lCus);

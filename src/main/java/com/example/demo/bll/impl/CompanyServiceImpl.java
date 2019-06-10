@@ -1,7 +1,8 @@
 package com.example.demo.bll.impl;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -12,8 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.bll.CompanyService;
 import com.example.demo.dao.CompanyDao;
-import com.example.demo.dto.CompanyDto;
 import com.example.demo.model.Company;
+import com.example.demo.req.BaseReq;
 
 @Service(value = "companyService")
 @Transactional
@@ -25,20 +26,15 @@ public class CompanyServiceImpl implements CompanyService {
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	public List<CompanyDto> search(String keyword) {
-		List<Company> res = companyDao.search(keyword);
+	public List<Company> search(BaseReq req) {
+		List<Company> res = StreamSupport.stream(companyDao.findAll().spliterator(), false)
+				.filter(i -> i.getName().toUpperCase().contains(req.getKeyword())).collect(Collectors.toList());
 
-		List<CompanyDto> lData = new ArrayList<>();
-		for (Company i : res) {
-			lData.add(new CompanyDto(i.getId(), i.getName()));
-		}
-
-		return lData;
+		return res;
 	}
 
 	public Company getById(int id) {
-		Company res = companyDao.getBy(id);
-		return res;
+		return companyDao.findById(id).orElse(null);
 	}
 
 	public String save(Company m) {
@@ -66,7 +62,7 @@ public class CompanyServiceImpl implements CompanyService {
 	public String remove(int id) {
 		String res = "";
 
-		Company m = companyDao.getBy(id);
+		Company m = getById(id);
 		if (m != null) {
 			companyDao.delete(m);
 		} else {

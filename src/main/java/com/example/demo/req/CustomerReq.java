@@ -18,11 +18,11 @@ public class CustomerReq {
 	@JsonProperty(value = "email")
 	private String email;
 
-	@JsonProperty(value = "company")
-	private Integer company;
-
 	@JsonProperty(value = "dob")
 	private Date dob;
+
+	@JsonProperty(value = "company")
+	private CompanyReq company;
 
 	public String getName() {
 		return name;
@@ -56,11 +56,11 @@ public class CustomerReq {
 		this.email = email;
 	}
 
-	public Integer getCompany() {
+	public CompanyReq getCompany() {
 		return company;
 	}
 
-	public void setCompany(Integer company) {
+	public void setCompany(CompanyReq company) {
 		this.company = company;
 	}
 
@@ -76,7 +76,7 @@ public class CustomerReq {
 		super();
 	}
 
-	public CustomerReq(String name, String phone, String address, String email, Integer company, Date dob) {
+	public CustomerReq(String name, String phone, String address, String email, CompanyReq company, Date dob) {
 		super();
 		this.name = name;
 		this.phone = phone;

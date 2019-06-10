@@ -2,8 +2,8 @@ package com.example.demo.bll;
 
 import java.util.List;
 
-import com.example.demo.dto.CompanyDto;
 import com.example.demo.model.Company;
+import com.example.demo.req.BaseReq;
 
 public interface CompanyService {
 
@@ -13,7 +13,7 @@ public interface CompanyService {
 	 * @param keyword to search like
 	 * @return
 	 */
-	public List<CompanyDto> search(String keyword);
+	public List<Company> search(BaseReq req);
 
 	/**
 	 * Get company by Id

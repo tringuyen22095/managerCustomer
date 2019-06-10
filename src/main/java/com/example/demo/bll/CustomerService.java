@@ -1,10 +1,9 @@
 package com.example.demo.bll;
 
-import java.util.Date;
 import java.util.List;
 
-import com.example.demo.dto.CustomerDto;
 import com.example.demo.model.Customer;
+import com.example.demo.req.BaseReq;
 
 public interface CustomerService {
 
@@ -17,21 +16,16 @@ public interface CustomerService {
 	public Customer getById(int id);
 
 	/**
-	 * Search customer(s) by name, address, phone number
+	 * Search customer(s) by name, address, phone number, company name
+	 * OR Date of birth
 	 * 
-	 * @param keyword to search like
+	 * @param keyword
+	 * @param dFrom
+	 * @param dTo
 	 * @return
+	 * @throws Exception
 	 */
-	public List<CustomerDto> search(String keyword) throws Exception;
-
-	/**
-	 * Get customer(s) by date range
-	 * 
-	 * @param dFrom from date
-	 * @param dTo   to date
-	 * @return
-	 */
-	public List<CustomerDto> search(Date dFrom, Date dTo);
+	public List<Customer> search(BaseReq req) throws Exception;
 
 	/**
 	 * Create/ Update customer

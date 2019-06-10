@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -37,10 +38,12 @@ public class CompanyContorller {
 		DataRsp res = new DataRsp();
 
 		try {
-			List<CompanyDto> lComp = companyService.search(req.getKeyword());
+			List<Company> lComp = companyService.search(req);
+			List<CompanyDto> lCompData = lComp.stream().map(i -> new CompanyDto(i.getId(), i.getName()))
+					.collect(Collectors.toList());
 
 			Map<String, Object> data = new LinkedHashMap<>();
-			data.put("data", lComp);
+			data.put("data", lCompData);
 
 			res.setResult(data);
 		} catch (Exception ex) {

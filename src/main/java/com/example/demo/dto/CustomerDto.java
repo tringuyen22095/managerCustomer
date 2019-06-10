@@ -27,8 +27,8 @@ public class CustomerDto {
 	@JsonProperty(value = "company")
 	private Integer company;
 
-	@JsonProperty(value = "companyName")
-	private String companyName;
+	@JsonProperty(value = "companyId")
+	private Integer companyId;
 
 	public Integer getId() {
 		return id;
@@ -79,23 +79,15 @@ public class CustomerDto {
 	}
 
 	public Integer getCompany() {
-		return company;
+		return companyId;
 	}
 
-	public void setCompany(Integer company) {
-		this.company = company;
+	public void setCompany(Integer companyId) {
+		this.companyId = companyId;
 	}
 
-	public String getCompanyName() {
-		return companyName;
-	}
-
-	public void setCompanyName(String companyName) {
-		this.companyName = companyName;
-	}
-
-	public CustomerDto(Integer id, String name, String address, String phone, String email, Date dob, Integer company,
-			String companyName) {
+	public CustomerDto(Integer id, String name, String address, String phone, String email, Date dob,
+			Integer companyId) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -103,8 +95,7 @@ public class CustomerDto {
 		this.phone = phone;
 		this.email = email;
 		this.dob = dob;
-		this.company = company;
-		this.companyName = companyName;
+		this.companyId = companyId;
 	}
 
 	public CustomerDto() {

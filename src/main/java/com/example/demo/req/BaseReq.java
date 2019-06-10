@@ -15,6 +15,12 @@ public class BaseReq {
 	@JsonProperty(value = "dTo")
 	private Date dTo;
 
+	@JsonProperty(value = "dTo")
+	private Integer show;
+
+	@JsonProperty(value = "dTo")
+	private Integer page;
+
 	public String getKeyword() {
 		return keyword;
 	}
@@ -39,14 +45,33 @@ public class BaseReq {
 		this.dTo = dTo;
 	}
 
-	public BaseReq() {
+	public Integer getShow() {
+		return show;
 	}
 
-	public BaseReq(String keyword, Date dFrom, Date dTo) {
+	public void setShow(Integer show) {
+		this.show = show;
+	}
+
+	public Integer getPage() {
+		return page;
+	}
+
+	public void setPage(Integer page) {
+		this.page = page;
+	}
+
+	public BaseReq(String keyword, Date dFrom, Date dTo, Integer show, Integer page) {
 		super();
 		this.keyword = keyword;
 		this.dFrom = dFrom;
 		this.dTo = dTo;
+		this.show = show;
+		this.page = page;
+	}
+
+	public BaseReq() {
+		super();
 	}
 
 }

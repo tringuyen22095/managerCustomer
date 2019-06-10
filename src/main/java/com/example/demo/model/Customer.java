@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -41,8 +42,8 @@ public class Customer implements Serializable {
 	@Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
 	private Date dob;
 
-	@Column(columnDefinition = "integer")
-	private Integer company;
+	@ManyToOne
+	private Company company;
 
 	public Integer getId() {
 		return id;
@@ -92,11 +93,11 @@ public class Customer implements Serializable {
 		this.dob = dob;
 	}
 
-	public Integer getCompany() {
+	public Company getCompany() {
 		return company;
 	}
 
-	public void setCompany(Integer company) {
+	public void setCompany(Company company) {
 		this.company = company;
 	}
 
