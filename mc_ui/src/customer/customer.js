@@ -21,7 +21,7 @@ export class ShowCustomer extends React.Component {
         this.type = 't';
         this.dFrom = this.dTo = null;
         this.selectedCbx = new Set();
-
+        this.filter = localStorage.getItem('filter') ? localStorage.getItem('filter').split(',') : [];
         this.show = 5;
         this.page = 1;
 
@@ -71,20 +71,6 @@ export class ShowCustomer extends React.Component {
         var act = e.target.name;
         var id = parseInt(act.substring(1, act.length));
         Const.confirmRemove(id, this);
-    }
-
-    /**
-     * Use for textbox date from
-     */
-    onChangeFrom = (d) => {
-        this.dFrom = d;
-    }
-
-    /**
-     * Use for textbox date to
-     */
-    onChangeTo = (d) => {
-        this.dTo = d;
     }
 
     /**
@@ -140,7 +126,7 @@ export class ShowCustomer extends React.Component {
                 <td>{Utils.formatDate(i.dob)}</td>
                 <td>{i.company.name}</td>
                 <td>
-                    <Link to={'/edit/' + i.id}>
+                    <Link to={'/customer/edit/' + i.id}>
                         <Button variant='outline-dark' name={'e' + i.id}>
                             <FontAwesomeIcon icon={faEdit} /> Edit
                         </Button>
@@ -154,13 +140,23 @@ export class ShowCustomer extends React.Component {
         return res;
     }
 
+    filterLayout() {
+        let res = [];
+        this.filter.map(val => {
+            res.push(<li key={val} className="tag">
+                {val}
+            </li>);
+        });
+        return res;
+    }
+
     /**
      * return search box base on type select
      */
     searchBox() {
-        return <FormControl
+        return this.filter.length !== 0 ? <FormControl
                     placeholder="Input to search..."
-                    onChange={this.onChange} />
+                    onChange={this.onChange} /> : <> </>
     }
 
     //Layout
@@ -170,7 +166,7 @@ export class ShowCustomer extends React.Component {
             <>
                 <Row>
                     <Col xs='4'>
-                        <Link to='/add'>
+                        <Link to='/customer/add'>
                             <Button variant='outline-dark' onClick={this.openModal}><FontAwesomeIcon icon={faPlus} /> Add Customer</Button>
                         </Link>
                         {
@@ -183,12 +179,23 @@ export class ShowCustomer extends React.Component {
                     <Col>
                         <InputGroup>
                             <InputGroup.Append>
-                                <Link to='/filter/customer'>
+                                <Link to='/customer/filter/'>
                                     <Button variant='outline-dark'>Filter</Button>
                                 </Link>
                             </InputGroup.Append>
                             {this.searchBox()}
                         </InputGroup>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <div className='form'>
+                            <div className='tags'>
+                                <ul style={{listStyle: 'none'}}>
+                                    {this.filterLayout()}
+                                </ul>
+                            </div>
+                        </div>
                     </Col>
                 </Row>
                 <Table bordered hover>

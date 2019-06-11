@@ -17,6 +17,7 @@ class Login extends React.Component {
         }
         else {
             this.showModal = false;
+            window.location.href = '/customer/';
             this.key = k;
         }
         this.isLoading = false;
@@ -35,28 +36,9 @@ class Login extends React.Component {
 
     //Event
 
-    //Layout
-
-    /**
-     * Check login success to show customer list
-     */
-    list() {
-        if (!this.showModal) {
-            return (
-                <>
-                    <Customer />
-                </>
-            );
-        }
-        return (<> </>);
-    }
-
-    //Layout
-
     render() {
         return (
             <>
-                {this.list()}
                 {
                     this.isLoading ?
                         <div className='fade modal-backdrop show' style={{ zIndex: 2000 }}>

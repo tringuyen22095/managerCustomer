@@ -13,5 +13,14 @@ public class Const {
 	public static final String PAYLOAD_NAME = "user";
 
 	public static final String ROLE_ADMIN = "Admin";
+	
+	public static enum filterCustomer {
+		Customer_Name,
+		Phone,
+		Address,
+		Email,
+		Company_Name,
+		Date_of_birth
+	}
 
 }

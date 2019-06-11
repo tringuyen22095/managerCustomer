@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.bll.CustomerService;
+import com.example.demo.common.Const;
 import com.example.demo.dao.CustomerDao;
 import com.example.demo.model.Customer;
 import com.example.demo.req.BaseReq;
@@ -27,18 +28,24 @@ public class CustomerServiceImpl implements CustomerService {
 
 	public List<Customer> search(BaseReq req) throws Exception {
 		List<Customer> res;
-		if (req.getKeyword() != null) {
-			res = StreamSupport.stream(customerDao.findAll().spliterator(), false)
-					.filter(i -> i.getName().toUpperCase().trim().contains(req.getKeyword().toUpperCase().trim())
-							|| i.getAddress().toUpperCase().trim().contains(req.getKeyword().toUpperCase().trim())
-							|| i.getPhone().toUpperCase().trim().contains(req.getKeyword().toUpperCase().trim())
-							|| i.getCompany().getName().toUpperCase().trim().contains(req.getKeyword().toUpperCase().trim()))
-					.collect(Collectors.toList());
-		} else {
-			res = StreamSupport.stream(customerDao.findAll().spliterator(), false)
-					.filter(i -> i.getDob().after(req.getdFrom()) && i.getDob().before(req.getdTo()))
-					.collect(Collectors.toList());
-		}
+
+		res = StreamSupport.stream(customerDao.findAll().spliterator(), false).collect(Collectors.toList());
+		res = res.stream().filter(i -> 
+				(req.getFilter().size() == 0
+						&& i.getName().contains("")) ||
+				(req.getFilter().indexOf(Const.filterCustomer.Customer_Name.name()) != -1
+						&& i.getName().toUpperCase().trim().contains(req.getKeyword().toUpperCase().trim())) ||
+				(req.getFilter().indexOf(Const.filterCustomer.Address.name()) != -1
+						&& i.getAddress().toUpperCase().trim().contains(req.getKeyword().toUpperCase().trim())) ||
+				(req.getFilter().indexOf(Const.filterCustomer.Phone.name()) != -1
+						&& i.getPhone().toUpperCase().trim().contains(req.getKeyword().toUpperCase().trim())) ||
+				(req.getFilter().indexOf(Const.filterCustomer.Email.name()) != -1
+						&& i.getEmail().toUpperCase().trim().contains(req.getKeyword().toUpperCase().trim())) ||
+				(req.getFilter().indexOf(Const.filterCustomer.Company_Name.name()) != -1
+						&& i.getCompany().getName().toUpperCase().trim().contains(req.getKeyword().toUpperCase().trim())) ||
+				(req.getFilter().indexOf(Const.filterCustomer.Date_of_birth.name()) != -1
+						&& i.getDob().after(req.getdFrom()) && i.getDob().before(req.getdTo())))
+				.collect(Collectors.toList());
 
 		return res;
 	}

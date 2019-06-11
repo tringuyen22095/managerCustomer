@@ -17,7 +17,8 @@ class AccountAPI {
         }).then((result) => {
             return result.json();
         }).then((jsonResult) => {
-            if (jsonResult.status === 'Success') {
+            let ok = jsonResult.status === 'Success'
+            if (ok) {
                 cmp.key = jsonResult.result.key;
                 localStorage.setItem('key', cmp.key);
                 cmp.showModal = false;
@@ -27,6 +28,9 @@ class AccountAPI {
             }
             cmp.isLoading = false;
             cmp.setState({});
+            if(ok) {
+                window.location.href = '/customer/';
+            }
         }).catch((error) => {
             cmp.error = error;
             cmp.isLoading = false;

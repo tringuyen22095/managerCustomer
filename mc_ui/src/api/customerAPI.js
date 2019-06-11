@@ -24,7 +24,8 @@ class CustomerAPI {
             "page": cmp.page,
             "show": cmp.show,
             "dFrom": cmp.dFrom ? Date.parse(cmp.dFrom) : null,
-            "dTo": cmp.dTo ? Date.parse(cmp.dTo) : null
+            "dTo": cmp.dTo ? Date.parse(cmp.dTo) : null,
+            "filter": cmp.filter.map(i => i.split(' ').join('_'))
         };
         await fetch('http://localhost:8080/customer/search', {
             method: 'post',

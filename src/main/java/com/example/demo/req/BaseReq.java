@@ -1,6 +1,7 @@
 package com.example.demo.req;
 
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -20,6 +21,9 @@ public class BaseReq {
 
 	@JsonProperty(value = "page")
 	private Integer page;
+	
+	@JsonProperty(value = "filter")
+	private List<String> filter;
 
 	public String getKeyword() {
 		return keyword;
@@ -61,13 +65,22 @@ public class BaseReq {
 		this.page = page;
 	}
 
-	public BaseReq(String keyword, Date dFrom, Date dTo, Integer show, Integer page) {
+	public List<String> getFilter() {
+		return filter;
+	}
+
+	public void setFilter(List<String> filter) {
+		this.filter = filter;
+	}
+
+	public BaseReq(String keyword, Date dFrom, Date dTo, Integer show, Integer page, List<String> filter) {
 		super();
 		this.keyword = keyword;
 		this.dFrom = dFrom;
 		this.dTo = dTo;
 		this.show = show;
 		this.page = page;
+		this.filter = filter;
 	}
 
 	public BaseReq() {

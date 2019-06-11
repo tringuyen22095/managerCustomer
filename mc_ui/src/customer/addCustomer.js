@@ -45,7 +45,7 @@ export class AddCustomer extends React.Component {
     }
 
     close = () => {
-        window.location.href = '/';
+        window.location.href = '/customer/';
     }
 
     remove(id) {

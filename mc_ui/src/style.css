@@ -199,11 +199,58 @@ input[type='search']::-webkit-search-cancel-button, input[type='search']::-webki
     padding: 0px 1px 1px 1px;
 }
 
-.title span {
+.title > span {
     background: #DDD;
     font-size: 28px;
 }
 
 .title > * {
     background: #fff;
+}
+
+.svg-inline--fa {
+    vertical-align: middle !important;
+    margin-left: 6px;
+}
+
+tfoot div > a, tfoot div > a:hover, tfoot div > a:active {
+    margin-right: 4px;
+    text-decoration: underline;
+    color: #000000;
+}
+
+.lv1 {
+    margin-left: 6px;
+    margin-right: 3px;
+}
+
+.lv2 {
+    margin-left: 18px;
+    margin-right: 3px;
+}
+
+.lv3 {
+    margin-left: 30px;
+    margin-right: 3px;
+}
+
+.lv4 {
+    margin-left: 42px;
+    margin-right: 3px;
+}
+
+.tags {
+    background: #fff;
+    padding: 5px;
+    overflow: hidden;
+}
+
+.tag {
+    color: #fff;
+    font-weight: bold;
+    background: #3498db;
+    float: left;
+    padding: 5px 10px;
+    border-radius: 10em;
+    margin: 5px;
 }
