@@ -21,7 +21,7 @@ public class BaseReq {
 
 	@JsonProperty(value = "page")
 	private Integer page;
-	
+
 	@JsonProperty(value = "filter")
 	private List<String> filter;
 

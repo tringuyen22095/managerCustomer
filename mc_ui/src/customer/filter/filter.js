@@ -2,6 +2,8 @@ import React from '../../../node_modules/react';
 import {
     ListGroup, Button
 } from 'react-bootstrap';
+import { Link } from "react-router-dom";
+import { FilterAPI } from '../../api/api';
 
 const jsonCustomer = {
     'All1': ['Customer Name', 'Phone', 'Address', 'Email'],
@@ -9,15 +11,55 @@ const jsonCustomer = {
 };
 
 const jsonCompany = {
-    'Company Name ': ''
+    'Company Name ': 'Drowdown'
 };
 
 export class Filter extends React.Component {
+
     constructor(props) {
         super(props);
-        this.cbxSelected = localStorage.getItem('filter') ? localStorage.getItem('filter').split(',') : [];
         this.json = jsonCustomer;
+        this.component = this.props.component;
         this.activeHref = 'customer';
+        this.cbxSelected = this.component.getComponent().getFilter();
+        this.Customer_Name = React.createRef();
+        this.ref = {
+            'All1': React.createRef(),
+            'Customer Name': React.createRef(),
+            'Phone': React.createRef(),
+            'Email': React.createRef(),
+            'Address': React.createRef(),
+            'Company Name ': React.createRef(),
+            'Date of birth ': React.createRef()
+        }
+
+        this.filterCustomer = this.cond(jsonCustomer);
+        this.filterCompany = this.cond(jsonCompany);
+        this.arrAllFilter = this.getAllFilter();
+    }
+
+    componentDidMount() {
+        this.test();
+    }
+
+    getAllFilter() {
+        let res = [];
+        for (let i in jsonCustomer) {
+            res.push(i);
+            if (typeof jsonCustomer[i] === 'object') {
+                let arr = jsonCustomer[i];
+                if (!arr.length) {
+                    continue;
+                }
+                for (let j in arr) {
+                    res.push(arr[j]);
+                }
+            }
+        }
+        for (let i in jsonCompany) {
+            res.push(i);
+        }
+        return res;
     }
 
     onSelect = (e) => {
@@ -34,7 +76,7 @@ export class Filter extends React.Component {
     onClickA = (e) => {
         e.preventDefault();
         this.cbxSelected = [];
-        this.setState({});
+        this.test();
     }
 
     setValue(val) {
@@ -53,9 +95,18 @@ export class Filter extends React.Component {
         this.setValue(val);
         let arr = this.json[target.value];
         if (typeof arr === 'object' && arr.length) {
-            arr.map(i => target.checked ? this.cbxSelected.push(i) : this.cbxSelected.splice(this.cbxSelected.indexOf(i), 1));
+            arr.map(i => {
+                if (target.checked) {
+                    if (this.cbxSelected.indexOf(i) === -1) {
+                        this.cbxSelected.push(i);
+                    }
+                }
+                else {
+                    this.cbxSelected.splice(this.cbxSelected.indexOf(i), 1);
+                }
+            });
         }
-        this.setState({});
+        this.test();
     }
 
     onSelectCbx = (e) => {
@@ -63,64 +114,81 @@ export class Filter extends React.Component {
         this.setValue(val);
         for (let k in this.json) {
             let value = this.json[k];
-            if (typeof value === 'object') {
-                let length = value.length;
-                if (length) {
-                    let total = 0;
-                    for (let i in value) {
-                        if (this.cbxSelected.indexOf(value[i])) {
-                            total++;
-                        }
-                    }
-                    if (length === total) {
-                        this.setValue(k);
-                    }
-                    else {
-                        this.cbxSelected.splice(this.cbxSelected.indexOf(k), 1);
+            let length = value.length;
+            if (typeof value === 'object' && length) {
+                let total = 0;
+                for (let i in value) {
+                    if (this.cbxSelected.indexOf(value[i]) !== -1) { total++; }
+                }
+                if (length === total) {
+                    this.setValue(k);
+                }
+                else {
+                    let found = this.cbxSelected.indexOf(k);
+                    if (found !== -1) {
+                        this.cbxSelected.splice(found, 1);
                     }
                 }
             }
         }
-        this.setState({});
+        this.test();
     }
 
     onApply = () => {
-        localStorage.setItem('filter', this.cbxSelected);
-        window.location.href = '/customer/';
+        this.component.getComponent().setFilter(this.cbxSelected);
     }
 
-    condCustomer() {
+    cond(json) {
         var res = [];
-        for (let k in this.json) {
-            let val = this.json[k];
-            res.push(this.cbxSelected.indexOf(k) !== -1 ?
+        for (let k in json) {
+            let val = json[k];
+            res.push(
                 <>
-                    <input type='checkbox' className='lv1' value={k} id={k} checked onChange={this.onSelectCbxAll} />
-                    <label htmlFor={k}>{k.substring(0, k.length-1)}</label><br />
-                </>:
-                <>
-                    <input type='checkbox' className='lv1' value={k} id={k} onChange={this.onSelectCbxAll} />
+                    <input type='checkbox' className='lv1' value={k} id={k} key={k} ref={this.ref[k]} onChange={this.onSelectCbxAll} />
                     <label htmlFor={k}>{k.substring(0, k.length - 1)}</label><br />
                 </>
             );
-            if (typeof val === 'object') {
-                if (val.length) { //Array
-                    for (let i in val) {
-                        res.push(this.cbxSelected.indexOf(val[i]) !== -1 ?
+            if (typeof val === 'object' && val.length) { //Array
+                for (let i in val) {
+                    res.push(
+                        <>
+                            <input type='checkbox' className='lv2' value={val[i]} key={val[i]} id={val[i]} ref={this.ref[val[i]]} onChange={this.onSelectCbx} />
+                            <label htmlFor={val[i]}>{val[i]}</label><br />
+                        </>
+                    );
+                }
+            }
+            if (typeof val === 'string') {
+                switch (val) {
+                    case 'Date':
+                        res.push(
                             <>
-                                <input type='checkbox' className='lv2' value={val[i]} checked id={val[i]} onChange={this.onSelectCbx} />
-                                <label htmlFor={val[i]}>{val[i]}</label><br />
-                            </>:
-                            <>
-                                <input type='checkbox' className='lv2' value={val[i]} id={val[i]} onChange={this.onSelectCbx} />
-                                <label htmlFor={val[i]}>{val[i]}</label><br />
+
                             </>
                         );
-                    }
+                        break;
+                    case 'Dropdown':
+                        res.push(
+                            <>
+
+                            </>
+                        );
+                        break
                 }
             }
         }
         return res;
+    }
+
+    test() {
+        for (let i in this.arrAllFilter) {
+            this.ref[this.arrAllFilter[i]].current.checked = this.cbxSelected.indexOf(this.arrAllFilter[i]) !== -1;
+        }
+    }
+
+    onSave = () => {
+        this.component.getComponent().setFilter([]);
+        FilterAPI.create('Default Filter Set', this.cbxSelected, this);
     }
 
     render() {
@@ -135,7 +203,12 @@ export class Filter extends React.Component {
                             </ListGroup>
                         </td>
                         <td>
-                            {this.condCustomer()}
+                            <div style={{ display: this.activeHref === 'customer' ? 'unset' : 'none' }}>
+                                {this.filterCustomer}
+                            </div>
+                            <div style={{ display: this.activeHref === 'company' ? 'unset' : 'none' }}>
+                                {this.filterCompany}
+                            </div>
                         </td>
                     </tr>
                 </tbody>
@@ -143,11 +216,15 @@ export class Filter extends React.Component {
                     <tr>
                         <td colSpan='2'>
                             <div style={{ float: 'left', verticalAlign: 'middle', lineHeight: '40px' }}>
-                                <Button variant='outline-danger'>Save as Filter Set</Button>
+                                <Link to='/customer/filter/filterSet' onClick={this.onApply}>
+                                    <Button variant='outline-danger' onClick={this.onSave}>Save as Filter Set</Button>
+                                </Link>
                             </div>
                             <div style={{ float: 'right', verticalAlign: 'middle', lineHeight: '40px' }}>
                                 <a href='#' onClick={this.onClickA}>Clear selection</a>
-                                <Button variant='danger' onClick={this.onApply}>Apply</Button>
+                                <Link to='/customer/' onClick={this.onApply}>
+                                    <Button variant='danger'>Apply</Button>
+                                </Link>
                             </div>
                             <div style={{ float: 'none' }}></div>
                         </td>

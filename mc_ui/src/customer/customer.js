@@ -21,7 +21,7 @@ export class ShowCustomer extends React.Component {
         this.type = 't';
         this.dFrom = this.dTo = null;
         this.selectedCbx = new Set();
-        this.filter = localStorage.getItem('filter') ? localStorage.getItem('filter').split(',') : [];
+        this.filter = this.props.component.getFilter();
         this.show = 5;
         this.page = 1;
 

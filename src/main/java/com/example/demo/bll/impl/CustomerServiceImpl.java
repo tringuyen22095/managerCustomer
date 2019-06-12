@@ -21,7 +21,7 @@ public class CustomerServiceImpl implements CustomerService {
 	@Autowired
 	private CustomerDao customerDao;
 
-	public Customer getById(int id) {
+	public Customer findById(int id) {
 		Customer res = customerDao.findById(id).orElse(null);
 		return res;
 	}
@@ -30,21 +30,20 @@ public class CustomerServiceImpl implements CustomerService {
 		List<Customer> res;
 
 		res = StreamSupport.stream(customerDao.findAll().spliterator(), false).collect(Collectors.toList());
-		res = res.stream().filter(i -> 
-				(req.getFilter().size() == 0
-						&& i.getName().contains("")) ||
-				(req.getFilter().indexOf(Const.filterCustomer.Customer_Name.name()) != -1
-						&& i.getName().toUpperCase().trim().contains(req.getKeyword().toUpperCase().trim())) ||
-				(req.getFilter().indexOf(Const.filterCustomer.Address.name()) != -1
-						&& i.getAddress().toUpperCase().trim().contains(req.getKeyword().toUpperCase().trim())) ||
-				(req.getFilter().indexOf(Const.filterCustomer.Phone.name()) != -1
-						&& i.getPhone().toUpperCase().trim().contains(req.getKeyword().toUpperCase().trim())) ||
-				(req.getFilter().indexOf(Const.filterCustomer.Email.name()) != -1
-						&& i.getEmail().toUpperCase().trim().contains(req.getKeyword().toUpperCase().trim())) ||
-				(req.getFilter().indexOf(Const.filterCustomer.Company_Name.name()) != -1
-						&& i.getCompany().getName().toUpperCase().trim().contains(req.getKeyword().toUpperCase().trim())) ||
-				(req.getFilter().indexOf(Const.filterCustomer.Date_of_birth.name()) != -1
-						&& i.getDob().after(req.getdFrom()) && i.getDob().before(req.getdTo())))
+		res = res.stream()
+				.filter(i -> (req.getFilter().size() == 0 && i.getName().contains(""))
+						|| (req.getFilter().indexOf(Const.filterCustomer.Customer_Name.name()) != -1
+								&& i.getName().toUpperCase().trim().contains(req.getKeyword().toUpperCase().trim()))
+						|| (req.getFilter().indexOf(Const.filterCustomer.Address.name()) != -1
+								&& i.getAddress().toUpperCase().trim().contains(req.getKeyword().toUpperCase().trim()))
+						|| (req.getFilter().indexOf(Const.filterCustomer.Phone.name()) != -1
+								&& i.getPhone().toUpperCase().trim().contains(req.getKeyword().toUpperCase().trim()))
+						|| (req.getFilter().indexOf(Const.filterCustomer.Email.name()) != -1
+								&& i.getEmail().toUpperCase().trim().contains(req.getKeyword().toUpperCase().trim()))
+						|| (req.getFilter().indexOf(Const.filterCustomer.Company_Name.name()) != -1 && i.getCompany()
+								.getName().toUpperCase().trim().contains(req.getKeyword().toUpperCase().trim()))
+						|| (req.getFilter().indexOf(Const.filterCustomer.Date_of_birth.name()) != -1
+								&& i.getDob().after(req.getdFrom()) && i.getDob().before(req.getdTo())))
 				.collect(Collectors.toList());
 
 		return res;

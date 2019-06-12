@@ -76,7 +76,7 @@ public class CompanyContorller {
 		BaseRsp res = new BaseRsp();
 
 		try {
-			Company m = companyService.getById(id);
+			Company m = companyService.findById(id);
 
 			m.setName(req.getName());
 

@@ -5,13 +5,17 @@ import {
 } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { Route, Link } from "react-router-dom";
 import { Filter } from './filter/filter';
 import { FilterSet } from './filter/filterSet';
 
 export class FilterCustomer extends React.Component {
     constructor(props) {
         super(props);
+    }
+
+    getComponent = () => {
+        return this.props.component;
     }
 
     render() {
@@ -52,10 +56,8 @@ export class FilterCustomer extends React.Component {
                                         </th>
                                     </tr>
                                 </thead>
-                                <Router>
-                                    <Route exact path="/customer/filter/filterSet" component={FilterSet} />
-                                    <Route exact path="/customer/filter/" component={Filter} />
-                                </Router>
+                                <Route exact path="/customer/filter/filterSet" component={() => <FilterSet component={this} />} />
+                                <Route exact path="/customer/filter/" component={() => <Filter component={this} />} />
                             </Table>
                         </Col>
                     </Row>

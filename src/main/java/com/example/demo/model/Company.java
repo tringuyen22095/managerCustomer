@@ -51,10 +51,19 @@ public class Company implements Serializable {
 		this.name = name;
 	}
 
-	public Company(Integer id, String name) {
+	public Set<Customer> getCustomers() {
+		return customers;
+	}
+
+	public void setCustomers(Set<Customer> customers) {
+		this.customers = customers;
+	}
+
+	public Company(Integer id, String name, Set<Customer> customers) {
 		super();
 		this.id = id;
 		this.name = name;
+		this.customers = customers;
 	}
 
 	public Company() {

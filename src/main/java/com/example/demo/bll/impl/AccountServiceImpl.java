@@ -28,13 +28,9 @@ public class AccountServiceImpl implements UserDetailsService, AccountService {
 		return accountDao.findById(uid).orElse(null);
 	}
 
-	private Account getById(String uid) {
-		return accountDao.findById(uid).orElse(null);
-	}
-
 	@Override
 	public UserDetails loadUserByUsername(String uid) throws UsernameNotFoundException {
-		Account a = getById(uid);
+		Account a = findById(uid);
 
 		if (a == null) {
 			throw new UsernameNotFoundException("Invalid username or password.");

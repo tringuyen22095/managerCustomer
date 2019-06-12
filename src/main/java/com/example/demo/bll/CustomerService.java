@@ -13,11 +13,11 @@ public interface CustomerService {
 	 * @param id to get detail
 	 * @return
 	 */
-	public Customer getById(int id);
+	public Customer findById(int id);
 
 	/**
-	 * Search customer(s) by name, address, phone number, company name
-	 * OR Date of birth
+	 * Search customer(s) by name, address, phone number, company name OR Date of
+	 * birth
 	 * 
 	 * @param keyword
 	 * @param dFrom

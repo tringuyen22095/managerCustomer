@@ -21,7 +21,7 @@ public interface CompanyService {
 	 * @param id to get detail
 	 * @return
 	 */
-	public Company getById(int id);
+	public Company findById(int id);
 
 	/**
 	 * Create/ Update company

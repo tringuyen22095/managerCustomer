@@ -39,7 +39,7 @@ public class CustomerController {
 		DataRsp res = new DataRsp();
 
 		try {
-			Customer cus = customerService.getById(id);
+			Customer cus = customerService.findById(id);
 
 			Map<String, Object> data = new LinkedHashMap<>();
 			data.put("data", cus);
@@ -62,9 +62,11 @@ public class CustomerController {
 			Map<String, Object> data = new LinkedHashMap<>();
 			int totalPage = lCus.size() / req.getShow();
 			totalPage += lCus.size() % req.getShow() != 0 ? 1 : 0;
-			data.put("page", totalPage == 0 ? 1 : totalPage < req.getPage() ? totalPage : (req.getPage() == 0 ? 1 : req.getPage()));
+			data.put("page", totalPage == 0 ? 1
+					: totalPage < req.getPage() ? totalPage : (req.getPage() == 0 ? 1 : req.getPage()));
 			data.put("totalRecord", lCus.size());
-			data.put("data", lCus.stream().skip((Integer.parseInt(data.get("page").toString()) - 1) * req.getShow()).limit(req.getShow()));
+			data.put("data", lCus.stream().skip((Integer.parseInt(data.get("page").toString()) - 1) * req.getShow())
+					.limit(req.getShow()));
 
 			res.setResult(data);
 		} catch (Exception ex) {

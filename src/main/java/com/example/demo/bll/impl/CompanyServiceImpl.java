@@ -33,7 +33,7 @@ public class CompanyServiceImpl implements CompanyService {
 		return res;
 	}
 
-	public Company getById(int id) {
+	public Company findById(int id) {
 		return companyDao.findById(id).orElse(null);
 	}
 
@@ -46,7 +46,7 @@ public class CompanyServiceImpl implements CompanyService {
 		if (id == null || id == 0) {
 			m1 = companyDao.save(m);
 		} else {
-			m1 = getById(id);
+			m1 = findById(id);
 			if (m1 == null) {
 				res = "Id does not exist.";
 			} else {
@@ -62,7 +62,7 @@ public class CompanyServiceImpl implements CompanyService {
 	public String remove(int id) {
 		String res = "";
 
-		Company m = getById(id);
+		Company m = findById(id);
 		if (m != null) {
 			companyDao.delete(m);
 		} else {
