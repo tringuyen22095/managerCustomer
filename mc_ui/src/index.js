@@ -12,16 +12,16 @@ class DefaultIndex extends React.Component {
 
     constructor() {
         super();
-        this.filter = [];
+        this.data = {};
         FilterAPI.findDefault(this);
     }
 
-    setFilter = (value) => {
-        this.filter = value;
+    setData = (value) => {
+        this.data = value;
     }
 
-    getFilter = () => {
-        return this.filter;
+    getData = () => {
+        return this.data;
     }
 
     render() {

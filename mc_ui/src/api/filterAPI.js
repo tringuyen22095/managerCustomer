@@ -1,8 +1,12 @@
 class FilterAPI {
 
-    static async search(cmp) {
+    static async search(keyword, cmp) {
+        let req = {
+            'keyword': keyword
+        };
         await fetch('http://localhost:8080/filter/search', {
             method: 'post',
+            body: JSON.stringify(req),
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('key')
@@ -10,10 +14,14 @@ class FilterAPI {
         }).then((result) => {
             return result.json();
         }).then((jsonResult) => {
-            cmp.data = jsonResult.result.data;
-            cmp.error = jsonResult.status === 'Success' ? '' : jsonResult.message;
+            if (jsonResult.status === 'Success') {
+                cmp.data = jsonResult.result.data;
+                cmp.count = jsonResult.result.count;
+            }
+            else {
+                cmp.error = jsonResult.message;
+            }
         }).catch((error) => {
-            cmp.data = [{}];
             cmp.error = error;
         });
         cmp.setState({});
@@ -30,7 +38,7 @@ class FilterAPI {
             return result.json();
         }).then((jsonResult) => {
             if(jsonResult.status === 'Success') {
-                cmp.filter = jsonResult.result.data.filter.filter.split(',');
+                cmp.data = jsonResult.result.data;
             }
             else {
                 cmp.error = jsonResult.message;
@@ -42,6 +50,9 @@ class FilterAPI {
     }
 
     static async create(name, filter, cmp) {
+        if(filter[0] === '') {
+            filter.shift();
+        }
         let req = {
             "name": name,
             "filter": filter.join(',') 
@@ -78,6 +89,7 @@ class FilterAPI {
             cmp.error = error;
         });
         cmp.setState({});
+        FilterAPI.search('', cmp);
     }
 
     static async edit(id, isDefault, name, filter, cmp) {

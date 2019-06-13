@@ -24,6 +24,7 @@ import com.example.demo.dto.TokenDto;
 import com.example.demo.model.Account;
 import com.example.demo.model.AccountFilterSet;
 import com.example.demo.model.FilterSet;
+import com.example.demo.req.BaseReq;
 import com.example.demo.req.FilterSetReq;
 import com.example.demo.rsp.BaseRsp;
 import com.example.demo.rsp.DataRsp;
@@ -40,15 +41,18 @@ public class FilterSetContorller {
 	private FilterSetService filterSetService;
 
 	@PostMapping("/search")
-	public ResponseEntity<?> search(@RequestHeader HttpHeaders header) {
+	public ResponseEntity<?> search(@RequestHeader HttpHeaders header, @RequestBody BaseReq req) {
 		DataRsp res = new DataRsp();
 
 		try {
 			TokenDto token = Utils.getTokenInfor(header);
-			List<AccountFilterSet> lAccountFilter = accountFilterSetService.findAllByAccUid(token.getUid());
+			List<AccountFilterSet> lAccountFilter;
+			lAccountFilter = accountFilterSetService.findAllByAccUid(token.getUid(), req.getKeyword());
+			int totalFilter = accountFilterSetService.findAllByAccUid(token.getUid(), "").size();
 
 			Map<String, Object> data = new LinkedHashMap<>();
 			data.put("data", lAccountFilter);
+			data.put("count", totalFilter);
 
 			res.setResult(data);
 		} catch (Exception ex) {
@@ -57,7 +61,7 @@ public class FilterSetContorller {
 
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
-	
+
 	@PostMapping("/findDefault")
 	public ResponseEntity<?> findDefault(@RequestHeader HttpHeaders header) {
 		DataRsp res = new DataRsp();
@@ -129,7 +133,7 @@ public class FilterSetContorller {
 			m.setAcc(ac);
 			m.setFilter(fs);
 			m.setIsDefault(isDefault);
-			
+
 			accountFilterSetService.save(m);
 		} catch (Exception ex) {
 			res.setMessage(ex.getMessage());

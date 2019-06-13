@@ -21,7 +21,7 @@ export class ShowCustomer extends React.Component {
         this.type = 't';
         this.dFrom = this.dTo = null;
         this.selectedCbx = new Set();
-        this.filter = this.props.component.getFilter();
+        this.filter = this.init();
         this.show = 5;
         this.page = 1;
 
@@ -29,6 +29,12 @@ export class ShowCustomer extends React.Component {
     }
 
     //Function
+
+    init() {
+        let data = this.props.component.getData().filter;
+        console.log(this.props.component.getData());
+        return data ? data.filter : '';
+    }
 
     remove(id_s) {
         let type = typeof id_s;
@@ -142,7 +148,10 @@ export class ShowCustomer extends React.Component {
 
     filterLayout() {
         let res = [];
-        this.filter.map(val => {
+        if (this.filter === '') {
+            return res;
+        }
+        this.filter.split(',').map(val => {
             res.push(<li key={val} className="tag">
                 {val}
             </li>);
@@ -154,6 +163,7 @@ export class ShowCustomer extends React.Component {
      * return search box base on type select
      */
     searchBox() {
+        console.log(this.filter);
         return this.filter.length !== 0 ? <FormControl
                     placeholder="Input to search..."
                     onChange={this.onChange} /> : <> </>

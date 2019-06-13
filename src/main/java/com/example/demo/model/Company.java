@@ -35,6 +35,10 @@ public class Company implements Serializable {
 	@JsonIgnore
 	private Set<Customer> customers;
 
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "company", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private Set<FilterSet> filterSets;
+
 	public Integer getId() {
 		return id;
 	}
@@ -59,11 +63,20 @@ public class Company implements Serializable {
 		this.customers = customers;
 	}
 
-	public Company(Integer id, String name, Set<Customer> customers) {
+	public Set<FilterSet> getFilterSets() {
+		return filterSets;
+	}
+
+	public void setFilterSets(Set<FilterSet> filterSets) {
+		this.filterSets = filterSets;
+	}
+
+	public Company(Integer id, String name, Set<Customer> customers, Set<FilterSet> filterSets) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.customers = customers;
+		this.filterSets = filterSets;
 	}
 
 	public Company() {

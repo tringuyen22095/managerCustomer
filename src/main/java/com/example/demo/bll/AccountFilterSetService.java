@@ -6,7 +6,7 @@ import com.example.demo.model.AccountFilterSet;
 
 public interface AccountFilterSetService {
 
-	public List<AccountFilterSet> findAllByAccUid(String uid);
+	public List<AccountFilterSet> findAllByAccUid(String uid, String keyword);
 
 	public AccountFilterSet findAllByAccFilter(String uid, Integer id);
 

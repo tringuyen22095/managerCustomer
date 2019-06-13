@@ -74,7 +74,8 @@ CREATE TABLE PUBLIC."filter_set"
 (
 	"id"					SERIAL PRIMARY KEY,
 	"name"				varchar(256),
-	"filter"			text
+	"filter"			text,
+	"company_id"		int references company("id")
 );
 
 DROP TABLE IF EXISTS PUBLIC."account_filter_set";
@@ -83,5 +84,5 @@ CREATE TABLE PUBLIC."account_filter_set"
 	"id"					SERIAL PRIMARY KEY,
 	"acc_uid"					varchar(256) REFERENCES account(uid),
 	"filter_id"				INT REFERENCES filter_set("id"),
-	"is_default"					bit
+	"is_default"					boolean
 );

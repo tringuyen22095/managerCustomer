@@ -5,7 +5,6 @@ import {
 } from '../../node_modules/react-bootstrap';
 import Loader from '../../node_modules/react-loader-spinner';
 import { AccountAPI } from '../api/api';
-import { Customer } from '../customer/index';
 
 class Login extends React.Component {
 

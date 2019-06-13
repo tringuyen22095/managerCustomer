@@ -19,13 +19,14 @@ class CustomerAPI {
     }
 
     static async searchByKeyword(cmp) {
+        let filter = cmp.filter !== '' ? cmp.filter.split(',').map(i => i.split(' ').join('_')) : [];
         let req = {
             "keyword": cmp.searchText ? cmp.searchText : '',
             "page": cmp.page,
             "show": cmp.show,
             "dFrom": cmp.dFrom ? Date.parse(cmp.dFrom) : null,
             "dTo": cmp.dTo ? Date.parse(cmp.dTo) : null,
-            "filter": cmp.filter.map(i => i.split(' ').join('_'))
+            "filter": filter
         };
         await fetch('http://localhost:8080/customer/search', {
             method: 'post',

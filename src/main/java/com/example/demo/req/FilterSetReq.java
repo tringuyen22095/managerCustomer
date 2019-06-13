@@ -1,5 +1,6 @@
 package com.example.demo.req;
 
+import com.example.demo.model.Company;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class FilterSetReq {
@@ -12,6 +13,9 @@ public class FilterSetReq {
 
 	@JsonProperty(value = "filter")
 	private String filter;
+	
+	@JsonProperty(value = "company")
+	private Company company;
 
 	public String getId() {
 		return id;
@@ -37,11 +41,20 @@ public class FilterSetReq {
 		this.filter = filter;
 	}
 
-	public FilterSetReq(String id, String name, String filter) {
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
+	}
+
+	public FilterSetReq(String id, String name, String filter, Company company) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.filter = filter;
+		this.company = company;
 	}
 
 	public FilterSetReq() {

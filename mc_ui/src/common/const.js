@@ -37,5 +37,14 @@ export class Const {
             ]
         });
     }
+
+    static jsonCustomer = {
+        'All1': ['Customer Name', 'Phone', 'Address', 'Email'],
+        'Date of birth ': 'Date'
+    };
+    
+    static jsonCompany = {
+        'Company Name ': 'Dropdown'
+    };
     
 }

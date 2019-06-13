@@ -254,3 +254,34 @@ tfoot div > a, tfoot div > a:hover, tfoot div > a:active {
     border-radius: 10em;
     margin: 5px;
 }
+
+.btnFilter {
+    border: none;
+    background-color: transparent;
+    text-align: center;
+    width: min-content;
+}
+
+.view {
+    color: #000;
+}
+
+.remove {
+    color: red;
+}
+
+.share {
+    color: #DFE900;
+}
+
+.default {
+    background-color: #A5D6A6;
+    color: #ffffff !important;
+    border: 0;
+    font-weight: bold;
+    padding: 3px 10px;
+}
+
+.default > a:hover, .default > a:active, .default > a {
+    color: red;
+}

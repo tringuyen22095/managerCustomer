@@ -10,7 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.bll.AccountFilterSetService;
 import com.example.demo.dao.AccountFilterSetDao;
+import com.example.demo.dao.FilterSetDao;
 import com.example.demo.model.AccountFilterSet;
+import com.example.demo.model.FilterSet;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service(value = "accountFilterSetService")
 @Transactional
@@ -19,9 +22,14 @@ public class AccountFilterSetServiceImpl implements AccountFilterSetService {
 	@Autowired
 	private AccountFilterSetDao accountFilterSetDao;
 
-	public List<AccountFilterSet> findAllByAccUid(String uid) {
+	@Autowired
+	private FilterSetDao filterSetDao;
+
+	public List<AccountFilterSet> findAllByAccUid(String uid, String keyword) {
 		List<AccountFilterSet> res = StreamSupport.stream(accountFilterSetDao.findAll().spliterator(), false)
-				.filter(i -> i.getAcc().getUid().equals(uid)).collect(Collectors.toList());
+				.filter(i -> i.getAcc().getUid().equals(uid)
+						&& i.getFilter().getName().toUpperCase().trim().contains(keyword.toUpperCase().trim()))
+				.collect(Collectors.toList());
 
 		return res;
 	}
@@ -30,6 +38,9 @@ public class AccountFilterSetServiceImpl implements AccountFilterSetService {
 		return accountFilterSetDao.findById(id).orElse(null);
 	}
 
+	/**
+	 * Set default or change name filter
+	 */
 	public String save(AccountFilterSet m) {
 		String res = "";
 
@@ -44,7 +55,12 @@ public class AccountFilterSetServiceImpl implements AccountFilterSetService {
 				res = "Id does not exist.";
 			} else {
 				m1.setIsDefault(m.getIsDefault());
+				if (m.getFilter() != null) {//Update filter
+					ObjectMapper mapper = new ObjectMapper();
+					FilterSet m2 = mapper.convertValue(m.getFilter(), FilterSet.class);
 
+					filterSetDao.save(m2);
+				}
 				accountFilterSetDao.save(m1);
 			}
 		}
@@ -75,6 +91,12 @@ public class AccountFilterSetServiceImpl implements AccountFilterSetService {
 	public AccountFilterSet findDefault(String uid) {
 		AccountFilterSet res = StreamSupport.stream(accountFilterSetDao.findAll().spliterator(), false)
 				.filter(i -> i.getIsDefault() && i.getAcc().getUid().equals(uid)).findFirst().orElse(null);
+		if(res == null) {
+			res = new AccountFilterSet();
+			FilterSet fs = new FilterSet();
+			fs.setFilter("");
+			res.setFilter(fs);
+		}
 		return res;
 	}
 

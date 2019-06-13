@@ -1,28 +1,23 @@
 import React from '../../../node_modules/react';
 import {
-    ListGroup, Button
+    ListGroup, Button, Modal, Container, Row, Col
 } from 'react-bootstrap';
 import { Link } from "react-router-dom";
-import { FilterAPI } from '../../api/api';
-
-const jsonCustomer = {
-    'All1': ['Customer Name', 'Phone', 'Address', 'Email'],
-    'Date of birth ': 'Date'
-};
-
-const jsonCompany = {
-    'Company Name ': 'Drowdown'
-};
+import { FilterAPI, CompanyAPI } from '../../api/api';
+import DatePicker from "react-datepicker";
+import SelectSearch from 'react-select-search';
+import { Const } from '../../common/const';
 
 export class Filter extends React.Component {
 
     constructor(props) {
         super(props);
-        this.json = jsonCustomer;
+        CompanyAPI.searchByKeyword('', this);
+        this.json = Const.jsonCustomer;
         this.component = this.props.component;
         this.activeHref = 'customer';
-        this.cbxSelected = this.component.getComponent().getFilter();
-        this.Customer_Name = React.createRef();
+        let data = this.props.component.getComponent().getData().filter ? this.props.component.getComponent().getData().filter : {filter:''};
+        this.cbxSelected = data ? data.filter.split(',') : [];
         this.ref = {
             'All1': React.createRef(),
             'Customer Name': React.createRef(),
@@ -32,22 +27,32 @@ export class Filter extends React.Component {
             'Company Name ': React.createRef(),
             'Date of birth ': React.createRef()
         }
-
-        this.filterCustomer = this.cond(jsonCustomer);
-        this.filterCompany = this.cond(jsonCompany);
+        this.options = [{}];
         this.arrAllFilter = this.getAllFilter();
+        this.state = {
+            showModal: false
+        };
+        this.filterName = React.createRef();
     }
 
     componentDidMount() {
-        this.test();
+        this.init();
+    }
+
+    onChangeFrom = () => {
+        
+    }
+
+    onChangeTo = () => {
+        
     }
 
     getAllFilter() {
         let res = [];
-        for (let i in jsonCustomer) {
+        for (let i in Const.jsonCustomer) {
             res.push(i);
-            if (typeof jsonCustomer[i] === 'object') {
-                let arr = jsonCustomer[i];
+            if (typeof Const.jsonCustomer[i] === 'object') {
+                let arr = Const.jsonCustomer[i];
                 if (!arr.length) {
                     continue;
                 }
@@ -56,7 +61,7 @@ export class Filter extends React.Component {
                 }
             }
         }
-        for (let i in jsonCompany) {
+        for (let i in Const.jsonCompany) {
             res.push(i);
         }
         return res;
@@ -65,18 +70,18 @@ export class Filter extends React.Component {
     onSelect = (e) => {
         this.activeHref = e;
         if (e === 'customer') {
-            this.json = jsonCustomer;
+            this.json = Const.jsonCustomer;
         }
         else {
-            this.json = jsonCompany;
+            this.json = Const.jsonCompany;
         }
         this.setState({});
     }
 
-    onClickA = (e) => {
+    onClearSelection = (e) => {
         e.preventDefault();
         this.cbxSelected = [];
-        this.test();
+        this.init();
     }
 
     setValue(val) {
@@ -106,7 +111,8 @@ export class Filter extends React.Component {
                 }
             });
         }
-        this.test();
+        this.init();
+        this.setState({});
     }
 
     onSelectCbx = (e) => {
@@ -131,30 +137,33 @@ export class Filter extends React.Component {
                 }
             }
         }
-        this.test();
+        this.init();
     }
 
     onApply = () => {
-        this.component.getComponent().setFilter(this.cbxSelected);
+        if (this.cbxSelected[0] === '') {
+            this.cbxSelected.shift();
+        }
+        this.props.component.getComponent().getData().filter.filter = this.cbxSelected.join(',');
     }
 
     cond(json) {
         var res = [];
-        for (let k in json) {
-            let val = json[k];
+        for (let key in json) {
+            let val = json[key];
             res.push(
-                <>
-                    <input type='checkbox' className='lv1' value={k} id={k} key={k} ref={this.ref[k]} onChange={this.onSelectCbxAll} />
-                    <label htmlFor={k}>{k.substring(0, k.length - 1)}</label><br />
-                </>
+                <div key={key}>
+                    <input type='checkbox' className='lv1' value={key} id={key} ref={this.ref[key]} onChange={this.onSelectCbxAll} />
+                    <label htmlFor={key}>{key.substring(0, key.length - 1)}</label><br />
+                </div>
             );
             if (typeof val === 'object' && val.length) { //Array
                 for (let i in val) {
                     res.push(
-                        <>
-                            <input type='checkbox' className='lv2' value={val[i]} key={val[i]} id={val[i]} ref={this.ref[val[i]]} onChange={this.onSelectCbx} />
+                        <div key={val[i]}>
+                            <input type='checkbox' className='lv2' value={val[i]}  id={val[i]} ref={this.ref[val[i]]} onChange={this.onSelectCbx} />
                             <label htmlFor={val[i]}>{val[i]}</label><br />
-                        </>
+                        </div>
                     );
                 }
             }
@@ -162,16 +171,21 @@ export class Filter extends React.Component {
                 switch (val) {
                     case 'Date':
                         res.push(
-                            <>
-
-                            </>
+                            <div style={{ display: this.ref[key].current && this.ref[key].current.checked ? 'unset' : 'none' }} key={key+val}>
+                                <DatePicker className='form-control' placeholderText='Choose date from' maxDate={this.dTo}
+                                    peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" isClearable={true}
+                                    selected={this.dFrom} onChange={this.onChangeFrom} dateFormat={Const.dateFormat} />
+                                <DatePicker className='form-control' placeholderText='Choose date to' minDate={this.dFrom}
+                                    peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" isClearable={true}
+                                    selected={this.dTo} onChange={this.onChangeTo} dateFormat={Const.dateFormat} />
+                            </div>
                         );
                         break;
                     case 'Dropdown':
                         res.push(
-                            <>
-
-                            </>
+                            <div style={{ display: this.ref[key].current && this.ref[key].current.checked ? 'unset' : 'none' }} key={key+val}>
+                                <SelectSearch options={this.options} placeholder='Choose Company' onChange={this.keyUp} />
+                            </div>
                         );
                         break
                 }
@@ -180,15 +194,35 @@ export class Filter extends React.Component {
         return res;
     }
 
-    test() {
+    init() {
         for (let i in this.arrAllFilter) {
             this.ref[this.arrAllFilter[i]].current.checked = this.cbxSelected.indexOf(this.arrAllFilter[i]) !== -1;
         }
     }
 
-    onSave = () => {
-        this.component.getComponent().setFilter([]);
-        FilterAPI.create('Default Filter Set', this.cbxSelected, this);
+    onSaveFilterSet = (e) => {
+        if(this.filterName.current.value) {
+            FilterAPI.create(this.filterName.current.value, this.cbxSelected, this);
+            this.onCloseModal();
+        }
+        else {
+            this.error = 'Filter name can\'t be empty.';
+            this.setState({});
+        }
+        e.preventDefault();
+    }
+
+    onOpenModal = () => {
+        this.error = '';
+        this.setState({
+            showModal: true
+        });
+    }
+
+    onCloseModal = () => {
+        this.setState({
+            showModal: false
+        });
     }
 
     render() {
@@ -204,10 +238,10 @@ export class Filter extends React.Component {
                         </td>
                         <td>
                             <div style={{ display: this.activeHref === 'customer' ? 'unset' : 'none' }}>
-                                {this.filterCustomer}
+                                {this.cond(Const.jsonCustomer)}
                             </div>
                             <div style={{ display: this.activeHref === 'company' ? 'unset' : 'none' }}>
-                                {this.filterCompany}
+                                {this.cond(Const.jsonCompany)}
                             </div>
                         </td>
                     </tr>
@@ -216,12 +250,10 @@ export class Filter extends React.Component {
                     <tr>
                         <td colSpan='2'>
                             <div style={{ float: 'left', verticalAlign: 'middle', lineHeight: '40px' }}>
-                                <Link to='/customer/filter/filterSet' onClick={this.onApply}>
-                                    <Button variant='outline-danger' onClick={this.onSave}>Save as Filter Set</Button>
-                                </Link>
+                                <Button variant='outline-danger' onClick={this.onOpenModal}>Save as Filter Set</Button>
                             </div>
                             <div style={{ float: 'right', verticalAlign: 'middle', lineHeight: '40px' }}>
-                                <a href='#' onClick={this.onClickA}>Clear selection</a>
+                                <a href='#' onClick={this.onClearSelection}>Clear selection</a>
                                 <Link to='/customer/' onClick={this.onApply}>
                                     <Button variant='danger'>Apply</Button>
                                 </Link>
@@ -230,6 +262,40 @@ export class Filter extends React.Component {
                         </td>
                     </tr>
                 </tfoot>
+                <Modal
+                    show={this.state.showModal}
+                    size="lg"
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered>
+                    <Modal.Header>
+                        <Modal.Title id="contained-modal-title-vcenter">
+                            Save Filter Set
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Container>
+                            <Row>
+                                <Col>
+                                    <label>Name</label>
+                                    <input type='text' placeholder='Username' ref={this.filterName} className='form-control' />
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <p style={{ color: 'red' }}>
+                                        {this.error}
+                                    </p>
+                                </Col>
+                            </Row>
+                        </Container>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Link to='/customer/filter/filterSet' onClick={this.onSaveFilterSet}>
+                            <Button variant="outline-primary">Save</Button>
+                        </Link>
+                        <Button variant="outline-danger" onClick={this.onCloseModal}>Cancel</Button>
+                    </Modal.Footer>
+                </Modal>
             </>
         );
     }

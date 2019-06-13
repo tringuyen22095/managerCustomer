@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -37,6 +38,9 @@ public class FilterSet implements Serializable {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "filter", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private Set<AccountFilterSet> accountFilterSets;
+
+	@ManyToOne
+	private Company company;
 
 	public Integer getId() {
 		return id;
@@ -70,16 +74,25 @@ public class FilterSet implements Serializable {
 		this.accountFilterSets = accountFilterSets;
 	}
 
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
+	}
+
 	public FilterSet() {
 		super();
 	}
 
-	public FilterSet(Integer id, String name, String filter, Set<AccountFilterSet> accountFilterSets) {
+	public FilterSet(Integer id, String name, String filter, Set<AccountFilterSet> accountFilterSets, Company company) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.filter = filter;
 		this.accountFilterSets = accountFilterSets;
+		this.company = company;
 	}
 
 }

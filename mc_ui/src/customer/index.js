@@ -7,14 +7,7 @@ import { FilterCustomer } from './filterCustomer';
 export class Customer extends React.Component {
     constructor(props) {
         super(props);
-    }
-
-    setFilter = (value) => {
-        this.props.component.setFilter(value);
-    }
-
-    getFilter = () => {
-        return this.props.component.getFilter();
+        this.component = this.props.component;
     }
 
     render() {
@@ -22,11 +15,11 @@ export class Customer extends React.Component {
             <div className='title'>
                 <span className='titleName'>Customer</span>
                 <div>
-                    <Route exact path="/customer/" component={() => <ShowCustomer component={this} />} />
+                    <Route exact path="/customer/" component={() => <ShowCustomer component={this.component} />} />
                     <Route exact path="/customer/add" component={() => <AddCustomer />} />
                     <Route exact path="/customer/edit/:id" component={() => <AddCustomer />} />
-                    <Route exact path="/customer/filter/" component={() => <FilterCustomer component={this} />} />
-                    <Route exact path="/customer/filter/filterSet" component={() => <FilterCustomer component={this} />} />
+                    <Route exact path="/customer/filter/" component={() => <FilterCustomer component={this.component} />} />
+                    <Route exact path="/customer/filter/filterSet" component={() => <FilterCustomer component={this.component} />} />
                 </div>
             </div>
         );
