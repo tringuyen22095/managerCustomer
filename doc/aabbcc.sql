@@ -84,5 +84,5 @@ CREATE TABLE PUBLIC."account_filter_set"
 	"id"					SERIAL PRIMARY KEY,
 	"acc_uid"					varchar(256) REFERENCES account(uid),
 	"filter_id"				INT REFERENCES filter_set("id"),
-	"is_default"					boolean
+	"is_default"					boolean DEFAULT(false)
 );
