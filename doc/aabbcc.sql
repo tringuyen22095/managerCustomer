@@ -77,7 +77,6 @@ CREATE TABLE PUBLIC."filter_set"
 	"filter"			text,
 	"company_id"		int references company("id")
 );
-
 DROP TABLE IF EXISTS PUBLIC."account_filter_set";
 CREATE TABLE PUBLIC."account_filter_set"
 (
