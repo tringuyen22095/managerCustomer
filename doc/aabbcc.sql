@@ -6,7 +6,7 @@ CREATE TABLE PUBLIC."account"
 	"name"				varchar(64),
 	"pwd_hash"		varchar(256)
 );
-select * from customer
+
 DROP TABLE IF EXISTS PUBLIC."company";
 CREATE TABLE PUBLIC."company"
 (
