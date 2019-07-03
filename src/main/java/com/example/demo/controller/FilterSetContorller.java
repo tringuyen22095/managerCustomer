@@ -120,7 +120,7 @@ public class FilterSetContorller {
 
 	@PutMapping("/{id}/{isDefault}")
 	public ResponseEntity<?> edit(@RequestHeader HttpHeaders header, @RequestBody FilterSetReq req,
-			@PathVariable("id") int id, @PathVariable("idDefault") boolean isDefault) {
+			@PathVariable("id") int id, @PathVariable("isDefault") boolean isDefault) {
 		BaseRsp res = new BaseRsp();
 
 		try {
@@ -133,6 +133,7 @@ public class FilterSetContorller {
 			m.setAcc(ac);
 			m.setFilter(fs);
 			m.setIsDefault(isDefault);
+			m.setId(id);
 
 			accountFilterSetService.save(m);
 		} catch (Exception ex) {

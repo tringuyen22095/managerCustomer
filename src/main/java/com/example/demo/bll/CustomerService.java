@@ -51,5 +51,7 @@ public interface CustomerService {
 	 * @throws Exception
 	 */
 	public String removes(Iterable<Integer> id) throws Exception;
+	
+	public List<Customer> get(int current);
 
 }

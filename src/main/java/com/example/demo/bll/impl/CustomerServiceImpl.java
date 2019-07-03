@@ -91,4 +91,13 @@ public class CustomerServiceImpl implements CustomerService {
 		return res;
 	}
 
+	@Override
+	public List<Customer> get(int current) {
+		int from = current * 100000;
+		int get = 100000;
+		List<Customer> res = customerDao.getLimit(from, get);
+
+		return res;
+	}
+
 }
