@@ -1,10 +1,10 @@
 package com.example.demo.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +33,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RestController
 @RequestMapping("/customer")
 public class CustomerController {
+
+	List<Customer> lData = new ArrayList<Customer>();
 
 	@Autowired
 	private CustomerService customerService;
@@ -146,80 +148,73 @@ public class CustomerController {
 	}
 
 	@GetMapping("/all")
-	public ResponseEntity<?> all() {
+	public ResponseEntity<?> all() throws InterruptedException, IOException {
 		DataRsp res = new DataRsp();
 
-		List<Customer> lData = new ArrayList<>();
-		List<Thread> lThread = new ArrayList<Thread>();
+		// List<Customer> lData = new ArrayList<>();
+		// List<Thread> lThread = new ArrayList<Thread>();
+		// IntStream.range(0, 10).forEach(i -> {
+		// Thread t = new Thread(new Task(i, lData), "t" + i);
+		// lThread.add(t);
+		// t.start();
+		// });
+
+		// System.out.println("Main thread exist");
+		// Map<String, Object> mData = new LinkedHashMap<>();
+		// mData.put("data", lData);
+
+		// final List<Customer> value = new ArrayList<Customer>();
+		// Thread testThread = new Thread(new Runnable() {
+		// @Override
+		// public void run() {
+		// value.add(new Customer());
+		// }
+		// });
+		// testThread.start();
+		// System.out.println(value.size());
+		// testThread.join();
+		// System.out.println(value.size());
+		// Runtime.getRuntime().exec("notepad");
+
+		lData.clear();
+		List<Task> lThread = new ArrayList<>();
 		IntStream.range(0, 10).forEach(i -> {
-			Thread t = new Thread(new Task(i, lData), "t" + i);
-			lThread.add(t);
-			t.start();
+			lThread.add(new Task(i));
+			lThread.get(i).start();
 		});
 
-		System.out.println("Main thread exist");
-		Map<String, Object> mData = new LinkedHashMap<>();
-		mData.put("data", lData);
+		lThread.forEach(i -> {
+			try {
+				i.join();
+				i.interrupt();
+			} catch (InterruptedException e) {
 
-		/*
-		 * ExecutorService executor = Executors.newFixedThreadPool(10);
-		 * List<Future<List<Customer>>> lFuture = new
-		 * ArrayList<Future<List<Customer>>>(); for (int i = 0; i < 10; i++) {
-		 * Callable<List<Customer>> callable = new Task2(i); Future<List<Customer>>
-		 * future = executor.submit(callable); lFuture.add(future); }
-		 * 
-		 * List<Customer> lData = new ArrayList<>(); lFuture.stream().forEach(i -> { try
-		 * { lData.addAll(i.get()); } catch (InterruptedException e) { // TODO
-		 * Auto-generated catch block e.printStackTrace(); } catch (ExecutionException
-		 * e) { // TODO Auto-generated catch block e.printStackTrace(); } });
-		 * Map<String, Object> mData = new LinkedHashMap<>(); mData.put("data", lData);
-		 * 
-		 * res.setResult(mData);
-		 */
+			}
+		});
+
+		Map<String, Object> mData = new LinkedHashMap<>();
+		mData.put("size", lData.size());
+		// mData.put("data", lData);
+		res.setResult(mData);
 
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
 
-	class Task2 implements Callable<List<Customer>> {
+	class Task extends Thread {
 
 		private int index;
 
-		public Task2(int index) {
+		public Task(int index) {
 			this.index = index;
-		}
-
-		@Override
-		public List<Customer> call() throws Exception {
-			List<Customer> res = customerService.get(this.index);
-			System.out.println("count " + res.size());
-			return res;
-		}
-
-	}
-
-	class Task implements Runnable {
-
-		private int index;
-
-		private List<Customer> lData;
-
-		public Task(int index, List<Customer> lData) {
-			this.index = index;
-			this.lData = lData;
 		}
 
 		@Override
 		public void run() {
-			try {
-				System.out.println(Thread.currentThread().getName() + " Started");
+			getData(index);
+		}
 
-				List<Customer> lData = customerService.get(this.index);
-				this.lData.addAll(lData);
-
-				System.out.println(Thread.currentThread().getName() + " Finished");
-			} catch (Exception ex) {
-				System.out.println(ex.getMessage());
-			}
+		private synchronized void getData(int index) {
+			lData.addAll(customerService.get(index));
 		}
 
 	}
