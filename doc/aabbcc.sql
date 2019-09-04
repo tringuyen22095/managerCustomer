@@ -6,29 +6,6 @@ CREATE TABLE PUBLIC."account"
 	"name"				varchar(64),
 	"pwd_hash"		varchar(256)
 );
-
-DROP TABLE IF EXISTS PUBLIC."company";
-CREATE TABLE PUBLIC."company"
-(
-	"id"					SERIAL PRIMARY KEY,
-	"name"				varchar(256)
-);
-
-DROP TABLE IF EXISTS PUBLIC."customer";
-CREATE TABLE PUBLIC."customer"
-(
-	"id"					SERIAL PRIMARY KEY,
-	"name"				varchar(64),
-	"phone"				varchar(64),
-	"email"				varchar(256),DROP TABLE IF EXISTS PUBLIC."account";
-CREATE TABLE PUBLIC."account"
-(
-	"uid"					varchar(64) PRIMARY KEY,
-	"pwd"					varchar(64),
-	"name"				varchar(64),
-	"pwd_hash"		varchar(256)
-);
-select * from customer
 DROP TABLE IF EXISTS PUBLIC."company";
 CREATE TABLE PUBLIC."company"
 (
